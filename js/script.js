@@ -1,5 +1,7 @@
 'use strict';
 
+//Allowing links on the left to switch articles
+
 function titleClickHandler(event){
   event.preventDefault();
   const clickedElement = this;
@@ -48,6 +50,8 @@ for(let link of links){
   link.addEventListener('click', titleClickHandler);
 }
 
+//Creation of list of titles in the left column
+
 const optArticleSelector = '.post',
   optTitleSelector = '.post-title',
   optTitleListSelector = '.titles';
@@ -58,10 +62,10 @@ console.log(generateTitleLinks);
   /* remove contents of titleList */
   const titleList = document.querySelector(optTitleListSelector);
 
-  function clearMessages(){
-    document.getElementById('messages').innerHTML = '';
-  }
+  titleList.innerHTML = '';
 
+
+  
   /* for each article */
 
     /* get the article id */
