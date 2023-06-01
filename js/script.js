@@ -64,10 +64,11 @@ console.log(generateTitleLinks);
 
   titleList.innerHTML = '';
 
-
-  
   /* for each article */
+  const articles = document.querySelectorAll(optArticleSelector);
 
+  for(let article of articles){
+  
     /* get the article id */
 
     /* find the title element */
@@ -77,6 +78,13 @@ console.log(generateTitleLinks);
     /* create HTML of the link */
 
     /* insert link into titleList */
+
+
+
+
+
+  }
+
 
 }
 
