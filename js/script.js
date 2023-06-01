@@ -86,12 +86,11 @@ console.log(generateTitleLinks);
 
     /* insert link into titleList */
 
-
+    titleList.insertAdjacentHTML("afterend", linkHTML);
 
 
 
   }
-
 
 }
 
