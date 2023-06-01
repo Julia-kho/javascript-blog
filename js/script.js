@@ -70,6 +70,7 @@ console.log(generateTitleLinks);
   for(let article of articles){
   
     /* get the article id */
+    const articleId = getAttribute('id');
 
     /* find the title element */
 
