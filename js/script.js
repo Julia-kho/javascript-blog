@@ -69,6 +69,8 @@ console.log(generateTitleLinks);
 
   const articles = document.querySelectorAll(optArticleSelector);
 
+  let html = '';
+
   for(let article of articles){
   
     /* get the article id */
@@ -85,12 +87,12 @@ console.log(generateTitleLinks);
     console.log(linkHTML);
 
     /* insert link into titleList */
+    html = html + linkHTML;
 
-    titleList.insertAdjacentHTML("afterend", linkHTML);
-
-
-
+    console.log(html)
   }
+
+  titleList.innerHTML = html;
 
 }
 
