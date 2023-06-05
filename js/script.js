@@ -88,21 +88,21 @@ function generateTitleLinks(customSelector = ''){
   }
 
   titleList.innerHTML = html;
+
+  const links = document.querySelectorAll('.titles a');
+  console.log(links);
+
+  for(let link of links){
+    link.addEventListener('click', titleClickHandler);
+  }
+
 }
 
 generateTitleLinks();
 
 //Tags
 
-const links = document.querySelectorAll('.titles a');
-console.log(links);
-
-for(let link of links){
-  link.addEventListener('click', titleClickHandler);
-}
-
 function generateTags(){
-  console.log(generateTags);
   /* find all articles */
 
   const articles = document.querySelectorAll(optArticleSelector);
@@ -213,3 +213,5 @@ function addClickListenersToTags(){
   }
 }
 addClickListenersToTags();
+
+
