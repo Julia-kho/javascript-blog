@@ -126,3 +126,30 @@ body {
 .post-author li {
   list-style-type: none;
 }
+
+/*Tags*/
+
+.tag-size-1 {
+  font-size: 90%;
+}
+
+.tag-size-2 {
+  font-size: 130%;
+}
+
+.tag-size-3 {
+  font-size: 150%;
+}
+
+.tag-size-4 {
+  font-size: 200%;
+}
+
+.tag-size-5 {
+  font-size: 300%;
+}
+
+.list.tags li {
+  display: inline-block;
+  margin-right: 5px;
+}
