@@ -50,6 +50,8 @@ const optArticleSelector = '.post',
   optTitleSelector = '.post-title',
   optTitleListSelector = '.titles',
   optArticleTagsSelector = '.post-tags .list';
+  optCloudClassCount = 5;
+  optCloudClassPrefix = tag-size-;
 
 function generateTitleLinks(customSelector = ''){
   console.log(generateTitleLinks);
@@ -102,6 +104,27 @@ generateTitleLinks();
 
 //Tags
 
+function calculateTagsParams(tags){
+  const params = {max: 0, min: 999999};
+
+  for(let tag in tags){
+    console.log(tag + ' is used ' + tags[tag] + ' times');
+
+    if(tags[tag] > params.max){
+      params.max = tags[tag];
+    }
+
+    if(tags[tag] < params.min){
+      params.min = tags[tag];
+    }
+  }
+
+  return params;
+}
+
+function calculateTagClass (){
+  
+}
 
 function generateTags(){
 
@@ -164,13 +187,15 @@ function generateTags(){
     /* insert HTML of all the links into the tags wrapper */
     titleTag.innerHTML = html;
     /* END LOOP: for every article: */
-
   }
 
   /* [NEW] find list of tags in right column */
   const tagList = document.querySelector(optTagsListSelector);
 
   /* [NEW] create variable for all links HTML code */
+  const tagsParams = calculateTagsParams(allTags);
+  console.log('tagsParams:', tagsParams);
+
   let allTagsHTML = '';
 
   /*[NEW] STARY LOOP: for each tag in allTags: */
@@ -182,7 +207,6 @@ function generateTags(){
 
   /*[NEW] add HTML for allTagsHTML to tagList: */
   tagList.innerHTML = allTagsHTML;
-
 }
 
 generateTags();
