@@ -51,53 +51,37 @@ const optArticleSelector = '.post',
   optTitleListSelector = '.titles',
   optArticleTagsSelector = '.post-tags .list',
   optCloudClassCount = 5,
-  optCloudClassPrefix = 'tag-size-';
+  optCloudClassPrefix = 'tag-size-',
+  optArticleAuthorSelector = '.post-author .list';
 
-function generateTitleLinks(customSelector = ''){
-  console.log(generateTitleLinks);
-  console.log(customSelector);
-  /* remove contents of titleList */
 
+function generateTitleLinks(customSelector = '') {
   const titleList = document.querySelector(optTitleListSelector);
-
   titleList.innerHTML = '';
 
-  /* for each article */
-
   const articles = document.querySelectorAll(optArticleSelector + customSelector);
-
   let html = '';
 
-  for(let article of articles){
-
-    /* get the article id */
-
+  for (let article of articles) {
     const articleId = article.getAttribute('id');
-
-    /* find the title element */
-
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
 
-    /* create HTML of the link */
-
     const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
-    console.log(linkHTML);
+    html += linkHTML;
 
-    /* insert link into titleList */
-    html = html + linkHTML;
-
-    console.log(html);
+    // Get the author's name from the data-author attribute
+    const articleAuthor = article.getAttribute('data-author');
+    // Display the author's name after the words "by"
+    const authorHTML = '<a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>';
+    article.querySelector('.post-author').innerHTML = 'by ' + authorHTML;
   }
 
   titleList.innerHTML = html;
 
   const links = document.querySelectorAll('.titles a');
-  console.log(links);
-
-  for(let link of links){
+  for (let link of links) {
     link.addEventListener('click', titleClickHandler);
   }
-
 }
 
 generateTitleLinks();
@@ -283,48 +267,72 @@ addClickListenersToTags();
 
 //Authors
 
-const optArticleAuthorSelector = '.post-author';
+function calculateAuthorsParams(articleAuthors){
+  const params = {max: 0, min: 999999};
 
-function generateAuthors(){
-  /* find all articles */
+  for(let articleAuthor in articleAuthors){
+    console.log(articleAuthor + ' is used ' + articleAuthors[articleAuthor] + ' times');
 
-  const articles = document.querySelectorAll(optArticleSelector);
+    if(articleAuthors[articleAuthor] > params.max){
+      params.max = articleAuthors[articleAuthor];
+    }
 
-  /* START LOOP: for every article: */
-
-  for(let article of articles){
-
-    /* find author wrapper */
-
-    const titleAuthor = article.querySelector(optArticleAuthorSelector);
-
-    /* make html variable with empty string */
-
-    let html = '';
-
-    /* get author from data-author attribute */
-
-    const articleAuthors = article.getAttribute('data-author');
-    console.log(articleAuthors);
-
-    /* generate HTML of the link */
-
-    const linkHTML = '<li><a href="#author-' + articleAuthors + '">' + articleAuthors + '</a></li> ';
-    console.log(linkHTML);
-
-    /* add generated code to html variable */
-
-    html = html + linkHTML;
-    console.log(html);
-
-    /* insert HTML of all the links into the author wrapper */
-
-    titleAuthor.innerHTML = html;
-
-  /* END LOOP: for every article: */
+    if(articleAuthors[articleAuthor] < params.min){
+      params.min = articleAuthors[articleAuthor];
+    }
   }
+
+  return params;
 }
 
+function calculateAuthorClass (count, params){
+  const normalizedCount = count - params.min;
+  const normalizedMax = params.max - params.min;
+  const percentage = normalizedCount / normalizedMax;
+  const classNumber = Math.floor( percentage * (optCloudClassCount - 1) + 1 );
+
+  return optCloudClassPrefix + classNumber;
+}
+
+
+function generateAuthors() {
+  // Find the list of authors in the right column
+  const authorList = document.querySelector('.list.authors');
+
+  // Create a new variable allAuthors with an empty object
+  let allAuthors = {};
+
+  // Find all articles
+  const articles = document.querySelectorAll(optArticleSelector);
+
+  // Loop through each article
+  for (let article of articles) {
+    // Get the author from the data-author attribute
+    const articleAuthor = article.getAttribute('data-author');
+
+    // Check if this author is not already in allAuthors
+    if (!allAuthors.hasOwnProperty(articleAuthor)) {
+      // Add author to allAuthors object
+      allAuthors[articleAuthor] = 1;
+    } else {
+      allAuthors[articleAuthor]++;
+    }
+  }
+
+  // Create a variable for all links HTML code
+  const authorsParams = calculateAuthorsParams(allAuthors);
+  let allAuthorsHTML = '';
+
+  // Loop through each author in allAuthors
+  for (let articleAuthor in allAuthors) {
+    // Generate code of a link and add it to allAuthorsHTML
+    const authorLinkHTML = `<li><a class="${calculateAuthorClass(allAuthors[articleAuthor], authorsParams)}" href="#author-${articleAuthor}">${articleAuthor}</a></li>`;
+    allAuthorsHTML += authorLinkHTML;
+  }
+
+  // Add HTML for allAuthorsHTML to authorList
+  authorList.innerHTML = allAuthorsHTML;
+}
 generateAuthors();
 
 //Clicking Authors
@@ -358,7 +366,7 @@ function authorClickHandler(event){
   /* END LOOP: for each active author link */
   }
   /* find all author links with "href" attribute equal to the "href" constant */
-  const authorLinks = document.querySelectorAll(href);
+  const authorLinks = document.querySelectorAll('a[href="' + href + '"]');
   console.log(authorLinks);
 
   /* START LOOP: for each found author link */
