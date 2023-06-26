@@ -3,7 +3,8 @@
 const templates = {
   articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
   tagArticleLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
-  authorArticleLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML)
+  authorArticleLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML),
+  tagCloudLink: Handlebars.compile(document.querySelector('#template-tag-cloud-link').innerHTML)
 };
 
 //Allowing links on the left to switch articles
@@ -171,7 +172,7 @@ function generateTags(){
       /* add generated code to html variable */
 
       html = html + linkHTML;
-      console.log(html);
+
 
       /* [NEW] check if this link is NOT already in allTags */
       if(!allTags.hasOwnProperty(tag)){
@@ -195,22 +196,28 @@ function generateTags(){
 
   /* [NEW] create variable for all links HTML code */
   const tagsParams = calculateTagsParams(allTags);
-  console.log('tagsParams:', tagsParams);
 
-  let allTagsHTML = '';
+
+  const allTagsData = {tags: []};
 
   /*[NEW] STARY LOOP: for each tag in allTags: */
   for(let tag in allTags){
     /*[NEW] generate code of a link and add it to allTagsHTML */
 
     const tagLinkHTML = '<li><a class="'+ calculateTagClass(allTags[tag], tagsParams) +'" href="#tag-' + tag + '">' + tag + '</a></li>';
-    console.log('tagLinkHTML:', tagLinkHTML);
-    allTagsHTML += tagLinkHTML;
+
+    allTagsData.tags.push({
+      tag: tag,
+      count: allTags[tag],
+      className: calculateTagClass(allTags[tag], tagsParams)
+    });
   }
   /*[NEW] END LOOP: for each tag in allTags */
 
   /*[NEW] add HTML for allTagsHTML to tagList: */
-  tagList.innerHTML = allTagsHTML;
+  tagList.innerHTML = templates.tagCloudLink(allTagsData);
+  console.log('NEW');
+  console.log(allTagsData);
 }
 
 generateTags();
@@ -254,7 +261,7 @@ function tagClickHandler(event){
     /* add class active */
     TagLink.classList.add('active');
   /* END LOOP: for each found tag link */
-  }
+ }
   /* execute function "generateTitleLinks" with article selector as argument */
 
   generateTitleLinks('[data-tags~="' + tag + '"]');
