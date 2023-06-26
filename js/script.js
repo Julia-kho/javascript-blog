@@ -1,8 +1,10 @@
 'use strict';
 
 const templates = {
-  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML)
-}
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML),
+  tagArticleLink: Handlebars.compile(document.querySelector('#template-tag-link').innerHTML),
+  authorArticleLink: Handlebars.compile(document.querySelector('#template-author-link').innerHTML)
+};
 
 //Allowing links on the left to switch articles
 
@@ -77,7 +79,10 @@ function generateTitleLinks(customSelector = '') {
     // Get the author's name from the data-author attribute
     const articleAuthor = article.getAttribute('data-author');
     // Display the author's name after the words "by"
-    const authorHTML = '<a href="#author-' + articleAuthor + '">' + articleAuthor + '</a>';
+
+    const authorArticleHTMLData = {id: articleAuthor, author: articleAuthor};
+    const authorHTML = templates.authorArticleLink(authorArticleHTMLData);
+
     article.querySelector('.post-author').innerHTML = 'by ' + authorHTML;
   }
 
@@ -159,7 +164,8 @@ function generateTags(){
       console.log(tag);
       /* generate HTML of the link */
 
-      const linkHTML = '<li><a href="#tag-' + tag + '">' + tag + '</a></li> ';
+      const linkHTMLData = {id: tag, title: tag};
+      const linkHTML = templates.tagArticleLink(linkHTMLData);
       console.log(linkHTML);
 
       /* add generated code to html variable */
@@ -332,6 +338,7 @@ function generateAuthors() {
   for (let articleAuthor in allAuthors) {
     // Generate code of a link and add it to allAuthorsHTML
     const authorLinkHTML = `<li><a class="${calculateAuthorClass(allAuthors[articleAuthor], authorsParams)}" href="#author-${articleAuthor}">${articleAuthor}</a></li>`;
+
     allAuthorsHTML += authorLinkHTML;
   }
 
