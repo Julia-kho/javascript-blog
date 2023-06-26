@@ -1,5 +1,9 @@
 'use strict';
 
+const templates = {
+  articleLink: Handlebars.compile(document.querySelector('#template-article-link').innerHTML)
+}
+
 //Allowing links on the left to switch articles
 
 function titleClickHandler(event){
@@ -66,7 +70,8 @@ function generateTitleLinks(customSelector = '') {
     const articleId = article.getAttribute('id');
     const articleTitle = article.querySelector(optTitleSelector).innerHTML;
 
-    const linkHTML = '<li><a href="#' + articleId + '"><span>' + articleTitle + '</span></a></li>';
+    const linkHTMLData = {id: articleId, title: articleTitle};
+    const linkHTML = templates.articleLink(linkHTMLData);
     html += linkHTML;
 
     // Get the author's name from the data-author attribute
